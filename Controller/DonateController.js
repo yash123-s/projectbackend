@@ -9,7 +9,6 @@ exports.donate_get_data = function(req, res) {
     });
   };
 
-  
   exports.donate = function(req, res) {console.log(req.body)
     var donateData = new DonateData(req.body);
     donateData.save(function(err, data) {
@@ -18,5 +17,3 @@ exports.donate_get_data = function(req, res) {
       res.json(data);
     });
   };
-  
-  
