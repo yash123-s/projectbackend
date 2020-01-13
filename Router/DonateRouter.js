@@ -4,7 +4,7 @@ module.exports = function(app) {
     
     
     app.route('/donate')
-    // .get(donateList.donate_get_data)
+    .get(donateList.donate_get_data)
     .post(donateList.donate);
 
     // app.route('/Donate')

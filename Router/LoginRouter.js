@@ -9,14 +9,12 @@ module.exports = function(app) {
   .post(todoList.signup);
   
   app.route('/Signin')
-  .get(todoList.userSignin);
+  .post(todoList.userSignin);
   
   app.route('/donate')
   .post(donateList.donate)
   .get(donateList.donate_get_data)
 
-  
-  
   app.route('/Singup/:SingupId')
   .get(todoList.read_a_task)
   .put(todoList.update_a_task)

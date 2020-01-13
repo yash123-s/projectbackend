@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const UserData =require('../Model/LoginModel');
-const bcrypt =require('bcrypt');
+const bcrypt =require('bcryptjs');
 const jwt = require('jsonwebtoken');
 var isAuth=require('../Middleware/isAuth')
 
@@ -77,31 +77,32 @@ UserData.find({}, function(err, task) {
 
 
     exports.userSignin = (req,res,next) =>{
-    const Mobnum = req.body.Mobnum;
+    const mobile = req.body.mobile;
     const password = req.body.password;
     let loadedUser;
-    UserData.findOne({Mobnum: Mobnum})
+    UserData.findOne({mobile: mobile})
     .then(user =>{
-    if(!user){
-        const error = new Error('A user with this mobile number could not be found.');
+        if(!user){
+            const error = new Error('A user with this mobile number could not be found.');
+            error.statusCode = 401;
+            throw error;
+        }
+        loadedUser = user;
+        console.log(bcrypt.compare(password,user.password))
+        return bcrypt.compare(password,user.password);
+    })   
+    .then(isEqual =>{
+        if(isEqual){
+        const error = new Error('wrong password.');
         error.statusCode = 401;
         throw error;
-            }
-        loadedUser = user;
-        return bcrypt.compare(password,user.password);
-        })
-    .then(isEqual =>{
-    if(!isEqual){
-    const error = new Error('wrong password.');
-    error.statusCode = 401;
-    throw error;
-    }
-    const token = jwt.sign(
-    {
-        Mobnum: loadedUser.Mobnum,
-        userId:loadedUser._id.toString()
-    },'secret')
-    return res.status(200).json({token: token, userId: loadedUser._id.toString(), Mobnum: loadedUser.Mobnum})
+        }
+        const token = jwt.sign(
+        {
+            mobile: loadedUser.mobile,
+            userId:loadedUser._id.toString()
+        },'secret')
+        return res.status(200).json({token: token, userId: loadedUser._id.toString(), mobile: loadedUser.mobile})
     })
     .catch(err => {
         if (!err.statusCode) {
@@ -110,3 +111,6 @@ UserData.find({}, function(err, task) {
     next(err);
     }); 
     }
+
+
+   
