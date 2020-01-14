@@ -79,6 +79,7 @@ UserData.find({}, function(err, task) {
     exports.userSignin = (req,res,next) =>{
     const mobile = req.body.mobile;
     const password = req.body.password;
+    const role=req.body.role;
     let loadedUser;
     UserData.findOne({mobile: mobile})
     .then(user =>{
@@ -98,11 +99,12 @@ UserData.find({}, function(err, task) {
         throw error;
         }
         const token = jwt.sign(
-        {
+        {   
+            role:loadedUser.role,
             mobile: loadedUser.mobile,
             userId:loadedUser._id.toString()
         },'secret')
-        return res.status(200).json({token: token, userId: loadedUser._id.toString(), mobile: loadedUser.mobile})
+        return res.status(200).json({token: token, userId: loadedUser._id.toString(), mobile: loadedUser.mobile , role: loadedUser.role})
     })
     .catch(err => {
         if (!err.statusCode) {

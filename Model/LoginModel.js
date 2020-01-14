@@ -6,28 +6,31 @@ var TaskSchema = new Schema({
 firstname: {
     type: String,
     required: true
-    },
-    lastname:{
+},
+lastname:{
     type: String,
     required:true
-    },
-    password:{
+},
+password:{
     type: String,
     required: true
-    },
+},
     // Confirmpassword:{
     // type: String,
     // required: true
     // },
-    email:{
+email:{
     type: String,
     required: true
-    },
-
-    mobile:{
+},
+mobile:{
     type: Number,
     required: true
-    }
+},
+role: {
+    type: String,
+    default: "user"
+}
 });
 
 module.exports = mongoose.model('Tasks', TaskSchema);
